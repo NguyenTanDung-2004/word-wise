@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: WordWise
+  datasource:
+    url: jdbc:mysql://172.24.126.164:3307/word_wise
+    username: root
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+jwt:
+  secret: hS*0Z/VqAe{Loiu\BErc@2qsW-lG0a,/
+  expiration: 3600
