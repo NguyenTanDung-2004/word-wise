@@ -1,0 +1,14 @@
+{
+  "sender": {
+    "name": "{sendername}",
+    "email": "{senderemail}"
+  },
+  "to": [
+    {
+      "email": "{recipientemail}",
+      "name": "abc"
+    }
+  ],
+  "htmlContent": "{htmlcontent}",
+  "subject": "{subject}"
+}

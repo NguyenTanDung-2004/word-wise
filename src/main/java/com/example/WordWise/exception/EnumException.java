@@ -14,12 +14,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public enum EnumException {
-    VERIFY_TOKEN_FAIL("f_user_01", "Verify Token Fail", HttpStatus.BAD_REQUEST),
-    USER_NOT_FOUND("f_user_02", "User Not Found", HttpStatus.BAD_REQUEST),
-    CODE_RESETPASS_WRONG("f_user_03", "Code is wrong", HttpStatus.BAD_REQUEST),
-    JSON_OBJECT_FAIL("f_user_04", "Convert json to object fail", HttpStatus.INTERNAL_SERVER_ERROR),
-    OBJECT_JSON_FAIL("f_user_05", "Convert object to json fail", HttpStatus.INTERNAL_SERVER_ERROR);
-
+    EMAIL_IS_EXISTED("e_01", "Email is existed", HttpStatus.BAD_REQUEST), 
+    VERIFY_TOKEN_FAIL("e_02", "Token verification failed", HttpStatus.UNAUTHORIZED), 
+    USER_NOT_FOUND("e_03", "User not found", HttpStatus.NOT_FOUND), 
+    PASSWORD_WRONG("e_04", "Password is incorrect", HttpStatus.UNAUTHORIZED);
+    
     String code;
     String message;
     HttpStatusCode httpStatusCode;
