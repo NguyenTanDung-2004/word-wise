@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.WordWise.entity.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
-    public User findByEmail(String email);
+    @Query("SELECT u FROM User u WHERE u.email = ?1")
+    User findByEmail(String email);
 }

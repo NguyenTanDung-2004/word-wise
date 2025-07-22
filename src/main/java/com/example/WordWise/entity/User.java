@@ -24,4 +24,5 @@ public class User {
     private String email;
     private String password;
     private String url;
+    private String codeResetPassword;
 }

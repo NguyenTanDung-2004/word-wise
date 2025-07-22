@@ -52,8 +52,22 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity resetPassword(@RequestBody ResetPasswordRequest code) {
-        
+    public ResponseEntity resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        if (resetPasswordRequest.getCode() == null || resetPasswordRequest.getCode().isEmpty()) {
+            userService.sendCodeViaEmail(resetPasswordRequest);
+            ApiResponse response = ApiResponse.builder()
+                    .enumResponse(EnumResponse.toJson(EnumResponse.SEND_CODE_FORGOT_PASSWORD_SUCCESS))
+                    .object(null)
+                    .build();
+            return ResponseEntity.ok(response);
+        }
+
+        userService.updateUserPassword(resetPasswordRequest);
+        ApiResponse response = ApiResponse.builder()
+                .enumResponse(EnumResponse.toJson(EnumResponse.SEND_CODE_FORGOT_PASSWORD_SUCCESS))
+                .object(null)
+                .build();
+        return ResponseEntity.ok(response);
     }
     
 }

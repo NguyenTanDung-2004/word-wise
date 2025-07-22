@@ -11,6 +11,4 @@ public abstract class Notification {
     protected String from;
     protected String to;
     protected String message;
-
-    public abstract void sendNotification();
 }
