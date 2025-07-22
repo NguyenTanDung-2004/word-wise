@@ -47,4 +47,10 @@ public class WordController {
 
         return ResponseEntity.ok(apiResponse);
     }
+
+    @GetMapping("/words")
+    public ResponseEntity getListWord(@RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
+        
+    }
+
 }
