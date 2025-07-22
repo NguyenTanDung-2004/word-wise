@@ -17,7 +17,8 @@ public enum EnumException {
     EMAIL_IS_EXISTED("e_01", "Email is existed", HttpStatus.BAD_REQUEST), 
     VERIFY_TOKEN_FAIL("e_02", "Token verification failed", HttpStatus.UNAUTHORIZED), 
     USER_NOT_FOUND("e_03", "User not found", HttpStatus.NOT_FOUND), 
-    PASSWORD_WRONG("e_04", "Password is incorrect", HttpStatus.UNAUTHORIZED);
+    PASSWORD_WRONG("e_04", "Password is incorrect", HttpStatus.UNAUTHORIZED),
+    WORD_NOT_FOUND("e_05", "Word is not found", HttpStatus.NOT_FOUND);
     
     String code;
     String message;

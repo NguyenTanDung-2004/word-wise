@@ -1,6 +1,7 @@
 package com.example.WordWise.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    @Qualifier("wordMapper")
     private Mapper mapper;
 
     @PostMapping("/register")
@@ -50,10 +52,4 @@ public class UserController {
                 .build();
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity resetPassword(@RequestBody ResetPasswordRequest code) {
-        
-    }
-    
 }
