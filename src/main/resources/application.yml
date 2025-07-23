@@ -17,8 +17,8 @@ user:
   defaultavt: https://res.cloudinary.com/dos914bk9/image/upload/v1738333283/avt/kazlexgmzhz3izraigsv.jpg
 
 mail:
-  apikey: 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
+  apikey: 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
   url: https://api.brevo.com/v3/smtp/email
   sendername: Word-Wise
   senderemail: 22520001@gm.uit.edu.vn
-  templatePath: word-wise/src/main/java/com/example/WordWise/template
+  templatePath: templates
