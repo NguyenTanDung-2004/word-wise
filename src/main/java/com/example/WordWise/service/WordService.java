@@ -1,5 +1,6 @@
 package com.example.WordWise.service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -55,5 +56,10 @@ public class WordService {
             return (Word) optWord.get();
         }
         return null;
+    }
+
+    public List<Word> getListWords(int page, int pageSize, String userId) {
+        List<Word> list = this.wordRepository.getListWords(userId, pageSize, page);
+        return list;
     }
 }

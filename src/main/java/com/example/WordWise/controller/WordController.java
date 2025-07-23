@@ -1,5 +1,7 @@
 package com.example.WordWise.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +52,13 @@ public class WordController {
 
     @GetMapping("/words")
     public ResponseEntity getListWord(@RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
-        
+        List<Word> list = this.wordService.getListWords(page, size, "123");
+        ApiResponse apiResponse = ApiResponse.builder()
+        .object(list)
+        .enumResponse(EnumResponse.toJson(EnumResponse.EDIT_WORD_SUCCESS))    
+        .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
 }

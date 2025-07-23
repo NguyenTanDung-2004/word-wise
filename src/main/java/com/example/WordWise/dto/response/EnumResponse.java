@@ -25,7 +25,8 @@ public enum EnumResponse {
     UPDATE_USER_HOBBIES("s_07", "Update user hobbies successfully!", HttpStatus.OK),
     SEARCH_USER_SUCCESS("s_08", "Search user successfully!", HttpStatus.OK),
     INSERT_WORD_SUCCESS("s_09", "Insert word successfully!", HttpStatus.OK),
-    EDIT_WORD_SUCCESS("s_10", "Edit word successfully!", HttpStatus.OK);
+    EDIT_WORD_SUCCESS("s_10", "Edit word successfully!", HttpStatus.OK),
+    GET_WORDS_SUCCESS("s_11", "Get words successfully!", HttpStatus.OK);
 
     String code;
     String message;
