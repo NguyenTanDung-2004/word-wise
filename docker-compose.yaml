@@ -1,0 +1,23 @@
+services:
+  db_userservice:
+    image: mysql:latest
+    container_name: word_wise
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=word_wise # this line is used to create the database
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./volumes/word_wise:/var/lib/mysql
+    networks:
+      - word_wise
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s     # Check health every 10 seconds
+      timeout: 5s       # Wait 5 seconds for a response
+      retries: 3        # Retry 3 times before declaring failure
+
+networks:
+  word_wise:
+    driver: bridge
