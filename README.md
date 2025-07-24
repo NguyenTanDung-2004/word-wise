@@ -63,6 +63,20 @@ curl --location 'http://localhost:8080/word/editWord' \
 }'
 ```
 
+**3. Get words within pagination**
+```
+curl --location --request GET 'http://localhost:8080/word/words?page=0&size=3' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer token' \
+--data '{
+    "wordId": "77cb390b-8b2b-4154-8134-a524b1641bc8",
+    "context": "example context1234",
+    "englishWord": "hello1234",
+    "vietnameseWord": "xin chào1234",
+    "isExtension": true,
+    "note": "sample note 1234"
+}'
+```
 ## System Organization
 ### 1. Notification
 ![Notification Organization](./assets/NotificationOrganization.png)

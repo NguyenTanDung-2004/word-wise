@@ -2,10 +2,11 @@ package com.example.WordWise.controller;
 
 import java.util.List;
 
+import com.example.WordWise.entity.User;
+import com.example.WordWise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.WordWise.dto.request.EditWordRequest;
 import com.example.WordWise.dto.request.InsertWordRequest;
@@ -14,18 +15,15 @@ import com.example.WordWise.dto.response.EnumResponse;
 import com.example.WordWise.entity.Word;
 import com.example.WordWise.service.WordService;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/word")
 public class WordController {
     @Autowired
     private WordService wordService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/insertWord")
     public ResponseEntity insertWord(@RequestBody InsertWordRequest insertWordRequest) {
@@ -51,13 +49,14 @@ public class WordController {
     }
 
     @GetMapping("/words")
-    public ResponseEntity getListWord(@RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
-        List<Word> list = this.wordService.getListWords(page, size, "123");
+    public ResponseEntity getListWord(@RequestHeader("Authorization") String authorizationHeader
+            , @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
+        User user = this.userService.getUserFromAthorization(authorizationHeader);
+        List<Word> list = this.wordService.getListWords(page, size, user.getUserId());
         ApiResponse apiResponse = ApiResponse.builder()
         .object(list)
         .enumResponse(EnumResponse.toJson(EnumResponse.EDIT_WORD_SUCCESS))    
         .build();
-
         return ResponseEntity.ok(apiResponse);
     }
 

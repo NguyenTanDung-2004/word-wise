@@ -21,6 +21,8 @@ import com.example.WordWise.utils.GenUtils;
 import com.example.WordWise.utils.JwtUtils;
 import com.example.WordWise.utils.PasswordUtils;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -102,5 +104,26 @@ public class UserService {
         user.setPassword(hashedPassword);
         user.setCodeResetPassword(null); // Clear the reset code after successful password change
         userRepository.save(user);
+    }
+
+    public User getUserFromAthorization(String authorizationHeader) {
+        // Extract token from "Bearer <token>"
+        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7)
+                : authorizationHeader;
+
+        String userId = (String) this.jwtUtils.decodeJWT(token).get("userId");
+        User user = getUserFromId(userId);
+
+        return user;
+    }
+
+    private User getUserFromId(String userId) {
+        Optional<User> optUser = this.userRepository.findById(userId);
+
+        if (!optUser.isPresent()) {
+            throw new UserException(EnumException.USER_NOT_FOUND);
+        }
+
+        return optUser.get();
     }
 }
