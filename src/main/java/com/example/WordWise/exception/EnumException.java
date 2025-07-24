@@ -18,8 +18,9 @@ public enum EnumException {
     VERIFY_TOKEN_FAIL("e_02", "Token verification failed", HttpStatus.UNAUTHORIZED), 
     USER_NOT_FOUND("e_03", "User not found", HttpStatus.NOT_FOUND), 
     PASSWORD_WRONG("e_04", "Password is incorrect", HttpStatus.UNAUTHORIZED),
-    CODE_RESET_PASSWORD_WRONG("e_05", "Code reset password is incorrect", HttpStatus.BAD_REQUEST),;
-    
+    WORD_NOT_FOUND("e_05", "Word is not found", HttpStatus.NOT_FOUND),
+    CODE_RESET_PASSWORD_WRONG("e_06", "Code reset password is incorrect", HttpStatus.BAD_REQUEST),;
+
     String code;
     String message;
     HttpStatusCode httpStatusCode;

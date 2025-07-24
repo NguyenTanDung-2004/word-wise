@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.WordWise.dto.response.UserResponse;
 import com.example.WordWise.entity.User;
-@Component
+@Component("userMapper")
 public class UserMapper implements Mapper {
 
     @Override
