@@ -55,9 +55,10 @@ public class WordController {
         List<Word> list = this.wordService.getListWords(page, size, user.getUserId());
         ApiResponse apiResponse = ApiResponse.builder()
         .object(list)
-        .enumResponse(EnumResponse.toJson(EnumResponse.EDIT_WORD_SUCCESS))    
+        .enumResponse(EnumResponse.toJson(EnumResponse.EDIT_WORD_SUCCESS))
         .build();
         return ResponseEntity.ok(apiResponse);
     }
+
 
 }
