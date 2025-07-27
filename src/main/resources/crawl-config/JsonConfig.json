@@ -4,7 +4,6 @@
     "url": "https://vtv.vn/vtv24.html",
     "component": {
       "query": ".box-category-item",
-      "isList": true,
       "elementType": "div",
       "childComponents": [
         {
@@ -29,5 +28,4 @@
       ]
     }
   }
-
 ]

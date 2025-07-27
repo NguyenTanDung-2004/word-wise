@@ -73,7 +73,9 @@ curl --location 'http://localhost:8080/word/words?page=0&size=3' \
 ## System Organization
 ### 1. Notification
 ![Notification Organization](./assets/NotificationOrganization.png)
+
 **How to use**
+
 *1. Inject notificationFactory and notificationProcessorFactory*
 ```
 @Autowired 
@@ -88,3 +90,44 @@ NotificationProcessorFactory notificationProcessorFactory;
 - NotificationProcessor notificationProcessor = this.notificationProcessorFactory.createProcessor(NotificationEnum.Mail);
 notificationProcessor.process(notification);
 ```
+
+### 2. Web Crawler
+![WebCrawlerOrganization](./assets/WebCrawlerOrganization.png)
+**1. Data Structure**
+- CrawlComponent.java 
+- CrawSiteConfig.java
+- JsonConfig.json 
+```
+[
+  {
+    "site": "VTV",
+    "url": "https://vtv.vn/vtv24.html",
+    "component": {
+      "query": ".box-category-item",
+      "elementType": "div",
+      "childComponents": [
+        {
+          "query": ".box-category-link-title",
+          "elementType": "a",
+          "attributes": [
+            "href"
+          ]
+        },
+        {
+          "query": ".box-category-avatar",
+          "elementType": "img",
+          "attributes": [
+            "src"
+          ]
+        },
+        {
+          "query": ".box-category-sapo",
+          "elementType": "div",
+          "isGetText": true // we need to get data of the elements's attributes or text
+        }
+      ]
+    }
+  }
+]
+```
+**2. Nguyen Tan Dung**

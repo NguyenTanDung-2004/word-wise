@@ -88,6 +88,15 @@
 			<version>1.15.3</version>
 		</dependency>
 		<!--CRAWL WEB-->
+
+		<!--Escape-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.11.0</version> <!-- or latest -->
+		</dependency>
+		<!--Escape-->
+
 	</dependencies>
 
 	<build>

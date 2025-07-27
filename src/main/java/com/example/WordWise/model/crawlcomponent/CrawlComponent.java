@@ -1,4 +1,4 @@
-package com.example.WordWise.model.CrawlComponentConfig;
+package com.example.WordWise.model.crawlcomponent;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,6 @@ import java.util.List;
 public class CrawlComponent {
     private String query;
     private String elementType;
-    private Boolean isList;
     private Boolean isGetText;
     private List<String> attributes;
     private List<CrawlComponent> childComponents;

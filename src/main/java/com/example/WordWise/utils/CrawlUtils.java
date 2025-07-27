@@ -1,6 +1,6 @@
 package com.example.WordWise.utils;
-import com.example.WordWise.model.CrawlComponentConfig.CrawlComponent;
-import com.example.WordWise.model.CrawlComponentConfig.CrawlSiteConfig;
+import com.example.WordWise.model.crawlcomponent.CrawlComponent;
+import com.example.WordWise.model.crawlcomponent.CrawlSiteConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
@@ -41,6 +41,10 @@ public class CrawlUtils {
 
         for (CrawlSiteConfig config : configs) {
             try {
+                if (!config.getSite().equals("VTV")) {
+                    continue;
+                }
+
                 System.out.println("📡 Crawling site: " + config.getSite());
                 Document doc = Jsoup.connect(config.getUrl()).get();
 
