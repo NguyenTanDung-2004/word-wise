@@ -154,15 +154,4 @@ public class CrawlerService {
             throw new RuntimeException("Failed to parse API response JSON", e);
         }
     }
-
-    @Scheduled(fixedRate = 5000)
-    public void testLoggingAspect() {
-        List<String> list = new ArrayList<>();
-        try {
-            System.out.println(list.get(1));
-        } catch (Exception e) {
-            throw new UserException(EnumException.CODE_RESET_PASSWORD_WRONG);
-        }
-    }
-
 }
