@@ -3,6 +3,8 @@ package com.example.WordWise.service;
 import com.example.WordWise.entity.CrawledWord;
 import com.example.WordWise.entity.TrendingNewFeed;
 import com.example.WordWise.enums.PromptEnum;
+import com.example.WordWise.exception.EnumException;
+import com.example.WordWise.exception.UserException;
 import com.example.WordWise.model.crawlcomponent.CrawlerFactory;
 import com.example.WordWise.model.crawlcomponent.CrawlerStrategy;
 import com.example.WordWise.model.crawlcomponent.VTVCrawler;
@@ -153,5 +155,14 @@ public class CrawlerService {
         }
     }
 
+    @Scheduled(fixedRate = 5000)
+    public void testLoggingAspect() {
+        List<String> list = new ArrayList<>();
+        try {
+            System.out.println(list.get(1));
+        } catch (Exception e) {
+            throw new UserException(EnumException.CODE_RESET_PASSWORD_WRONG);
+        }
+    }
 
 }
