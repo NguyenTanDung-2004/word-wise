@@ -25,4 +25,5 @@ public class User {
     private String password;
     private String url;
     private String codeResetPassword;
+    private String roleId;
 }
