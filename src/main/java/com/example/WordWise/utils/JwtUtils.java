@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.WordWise.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +46,8 @@ public class JwtUtils {
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
                 .claim("userId", user.getUserId())
+                .claim("role", RoleEnum.ADMIN)
+                .claim("permission", RoleEnum.ADMIN.getPermission())
                 .build();
 
         // create payload
@@ -72,6 +75,8 @@ public class JwtUtils {
                 claimsMap.put("issueTime", claims.getIssueTime());
                 claimsMap.put("expirationTime", claims.getExpirationTime());
                 claimsMap.put("roleId", claims.getClaim("roleId"));
+                claimsMap.put("role", claims.getClaim("role"));
+                claimsMap.put("permission", claims.getClaim("permission"));
                 claimsMap.put("userId", claims.getClaim("userId"));
             } else {
                 throw new UserException(EnumException.VERIFY_TOKEN_FAIL);
@@ -81,5 +86,11 @@ public class JwtUtils {
             throw new UserException(EnumException.VERIFY_TOKEN_FAIL);
         }
         return claimsMap;
+    }
+
+    public String getTokenFromHeader(String authorizationHeader) {
+        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7)
+                : authorizationHeader;
+        return token;
     }
 }
