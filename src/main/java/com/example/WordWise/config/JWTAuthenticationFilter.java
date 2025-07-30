@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,12 +22,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
 
     public JWTAuthenticationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
+        System.out.println(">>> Created Filter instance: " + this + " logger = " + this.logger);
     }
 
     @Override
