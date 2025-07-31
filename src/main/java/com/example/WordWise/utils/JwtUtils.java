@@ -93,4 +93,18 @@ public class JwtUtils {
                 : authorizationHeader;
         return token;
     }
+
+    public Boolean validateToken(String token) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            JWSVerifier verifier = new MACVerifier(secretKey);
+
+            if (signedJWT.verify(verifier)) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -24,12 +24,8 @@ import java.util.List;
 import java.util.Map;
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtUtils jwtUtils;
-
-    public JWTAuthenticationFilter(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-        System.out.println(">>> Created Filter instance: " + this + " logger = " + this.logger);
-    }
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -37,20 +33,25 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = this.jwtUtils.getTokenFromHeader(authHeader);
+
+            if (!this.jwtUtils.validateToken(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             Map<String, Object> decodedMap = this.jwtUtils.decodeJWT(token);
 
-            String userId = (String) decodedMap.get("userId");
-            RoleEnum role = (RoleEnum) decodedMap.get("role");
-            PermissionEnum[] permissions = (PermissionEnum[]) decodedMap.get("permission");
+            String role = (String) decodedMap.get("role");
+            List<String> permissions = (List<String>) decodedMap.get("permission");
 
             List<GrantedAuthority> authorities = new ArrayList<>();
 
             // Add role
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getId()));  // e.g., ROLE_ADMIN
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));  // e.g., ROLE_ADMIN
 
             // Add permissions
-            for (PermissionEnum permission : permissions) {
-                authorities.add(new SimpleGrantedAuthority(permission.getId())); // e.g., PERM_VIEW_USER
+            for (String permission : permissions) {
+                authorities.add(new SimpleGrantedAuthority(permission)); // e.g., PERM_VIEW_USER
             }
 
             UsernamePasswordAuthenticationToken authenticationToken =
