@@ -130,4 +130,27 @@ notificationProcessor.process(notification);
   }
 ]
 ```
-**2. Nguyen Tan Dung**
+
+
+## Problems and Solutions 
+### 1. SpringBoot auto inject with addFilterBefore() function  
+**Problem**
+- Step1: We create JWTAuthenticatorFilter class with annotation @Component
+- Step2: We inject JWTAuthenticatorFilter into SecurityConfig class with annotation @Autowired
+
+*Problem*: Spring boot will throw exception because JWTAuthentication Bean was registered.
+
+*Why*: 
+- First Register: @Autowired
+- Second Register: addFilterBefore() this function will automatically find and register a bean in the Spring Boot container.
+
+*Solution*:
+- Configure for Spring Boot to not register JWTAuthenticationFilter automatically when function .addFilterBefore() is triggered
+```
+@Bean
+public FilterRegistrationBean<JWTAuthenticationFilter> disableAutoRegistration(JWTAuthenticationFilter filter) {
+    FilterRegistrationBean<JWTAuthenticationFilter> registration = new FilterRegistrationBean<>(filter);
+    registration.setEnabled(false); // Ngăn Tomcat tự init filter
+    return registration;
+}
+```
