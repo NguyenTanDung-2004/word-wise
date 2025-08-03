@@ -1,11 +1,14 @@
 package com.example.WordWise.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.WordWise.entity.User;
 import com.example.WordWise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.WordWise.dto.request.EditWordRequest;
@@ -48,10 +51,12 @@ public class WordController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    //@PostAuthorize("hasRole('USER')")
     @GetMapping("/words")
-    public ResponseEntity getListWord(@RequestHeader("Authorization") String authorizationHeader
-            , @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
-        User user = this.userService.getUserFromAthorization(authorizationHeader);
+    public ResponseEntity getListWord(Authentication authentication, @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
+        Map<String, Object> userDetails = (Map<String, Object>) authentication.getPrincipal();
+        String userId = (String) userDetails.get("userId");
+        User user = this.userService.getUserFromId(userId);
         List<Word> list = this.wordService.getListWords(page, size, user.getUserId());
         ApiResponse apiResponse = ApiResponse.builder()
         .object(list)
@@ -59,6 +64,4 @@ public class WordController {
         .build();
         return ResponseEntity.ok(apiResponse);
     }
-
-
 }

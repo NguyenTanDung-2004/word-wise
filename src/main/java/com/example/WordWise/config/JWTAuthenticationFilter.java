@@ -22,20 +22,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private CustomAuthenticatorEntryPoint customAuthenticatorEntryPoint;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        // comment this code block to make it easy in developing.
+//        if (Objects.isNull(authHeader) || authHeader.isEmpty()) {
+//            customAuthenticatorEntryPoint.commence(request, response, null);
+//            return;
+//        }
+
+        if (!Objects.isNull(authHeader) && authHeader.startsWith("Bearer ")) {
             String token = this.jwtUtils.getTokenFromHeader(authHeader);
 
             if (!this.jwtUtils.validateToken(token)) {
-                filterChain.doFilter(request, response);
+                customAuthenticatorEntryPoint.commence(request, response, null);
                 return;
             }
 

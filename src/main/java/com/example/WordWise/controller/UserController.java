@@ -77,7 +77,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostAuthorize("hasRole('USER')")
     @GetMapping("/protected")
     public Object protectedEndpoint(Authentication authentication) {
         if (authentication == null) {

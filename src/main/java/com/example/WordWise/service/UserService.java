@@ -117,7 +117,7 @@ public class UserService {
         return user;
     }
 
-    private User getUserFromId(String userId) {
+    public User getUserFromId(String userId) {
         Optional<User> optUser = this.userRepository.findById(userId);
 
         if (!optUser.isPresent()) {

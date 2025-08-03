@@ -70,6 +70,14 @@ curl --location 'http://localhost:8080/word/words?page=0&size=3' \
 --header 'Authorization: Bearer token' \
 --data ''
 ```
+
+## New Feed Management
+**1. Get New Feed**
+```
+curl --location 'http://localhost:8080/new-feed' \
+--header 'Content-Type: application/json' \
+--data ''
+```
 ## System Organization
 ### 1. Notification
 ![Notification Organization](./assets/NotificationOrganization.png)

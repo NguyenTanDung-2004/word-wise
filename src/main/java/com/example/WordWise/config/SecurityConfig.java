@@ -66,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public FilterRegistrationBean<JWTAuthenticationFilter> disableAutoRegistration(JWTAuthenticationFilter filter) {
         FilterRegistrationBean<JWTAuthenticationFilter> registration = new FilterRegistrationBean<>(filter);
-        registration.setEnabled(false); // Ngăn Tomcat tự init filter
+        registration.setEnabled(false);
         return registration;
     }
 }
