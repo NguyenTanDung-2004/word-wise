@@ -126,4 +126,8 @@ public class UserService {
 
         return optUser.get();
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

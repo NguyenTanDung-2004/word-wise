@@ -1,6 +1,7 @@
 package com.example.WordWise.utils;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -60,5 +61,12 @@ public class Utils {
                 .replace("}", "");
 
         return result;
+    }
+
+    public static String getUserIdFromSecurityConfig(Authentication authentication) {
+        Map<String, Object> userDetails = (Map<String, Object>) authentication.getPrincipal();
+        String userId = (String) userDetails.get("userId");
+
+        return userId;
     }
 }
