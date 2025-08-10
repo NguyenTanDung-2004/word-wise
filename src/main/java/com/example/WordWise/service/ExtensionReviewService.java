@@ -110,6 +110,8 @@ public class ExtensionReviewService {
             throw new RuntimeException("API response body is null");
         }
 
+        System.out.println(bodyResponse);
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(bodyResponse);
 
@@ -126,6 +128,11 @@ public class ExtensionReviewService {
         String description = "", option1 = "", option2 = "", option3 = "";
 
         for (String line : text.split("\\n")) {
+            line = line.trim();
+            if (line.startsWith("- ")) {
+                line = line.substring(2).trim(); // bỏ dấu "- "
+            }
+
             if (line.startsWith("description:")) {
                 description = line.replaceFirst("description:\\s*", "");
             } else if (line.startsWith("option1:")) {
