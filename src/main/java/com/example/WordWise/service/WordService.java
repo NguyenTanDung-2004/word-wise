@@ -67,4 +67,10 @@ public class WordService {
     public Word getWordForReviewExtension(String userId, ExtensionReviewTypeEnum typeEnum) {
         return this.wordRepository.getReviewExtensionWord(userId, typeEnum.getId());
     }
+
+    public void setExtensionReviewValue(String description, List<String> options, Word word) {
+        word.setDescription(description);
+        word.setOptions(options);
+        this.wordRepository.save(word);
+    }
 }

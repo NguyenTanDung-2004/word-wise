@@ -16,7 +16,7 @@ public class ReviewExtensionMapper implements Mapper{
 
         switch (enumType) {
             case SELECT:
-                break;
+                return mapSELECT((Word) word, extensionReview);
             case TRANSLATE:
                 return mapTRANSLATE((Word) word, extensionReview);
             case COMPLETE:
@@ -25,10 +25,6 @@ public class ReviewExtensionMapper implements Mapper{
                 break;
         }
 
-        return null;
-    }
-
-    private ExtensionReview mapSELECT(Word word, ExtensionReview extensionReview) {
         return null;
     }
 
@@ -51,6 +47,20 @@ public class ReviewExtensionMapper implements Mapper{
         extensionReview.setWordId(word.getId());
         extensionReview.setUserId(word.getUserId());
 
+        return extensionReview;
+    }
+
+    private ExtensionReview mapSELECT(Word word, ExtensionReview extensionReview) {
+        extensionReview.setExtensionReviewType(ExtensionReviewTypeEnum.SELECT);
+        extensionReview.setVn(word.getVietnameseWord());
+        extensionReview.setEng(word.getEnglishWord());
+        extensionReview.setTestDate(LocalDateTime.now());
+        extensionReview.setWordId(word.getId());
+        extensionReview.setUserId(word.getUserId());
+        if (word.getDescription() != null) {
+            extensionReview.setDescription(word.getDescription());
+            extensionReview.setOptions(word.getOptions());
+        }
         return extensionReview;
     }
 }

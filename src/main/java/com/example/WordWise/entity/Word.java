@@ -2,6 +2,7 @@ package com.example.WordWise.entity;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,4 +33,8 @@ public class Word {
     private String vietnameseWord;
     private String note;
     private String analyzedText;
+
+    // These fields below are used to support for Extension Review feature (TYPE = SELECT)
+    private String description;
+    private List<String> options;
 }
