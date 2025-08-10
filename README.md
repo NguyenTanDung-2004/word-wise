@@ -78,6 +78,25 @@ curl --location 'http://localhost:8080/new-feed' \
 --header 'Content-Type: application/json' \
 --data ''
 ```
+
+## Extension Management 
+**1. Get extension review**
+```
+curl --location 'localhost:8080/review-extension' \
+--header 'Authorization: Bearer ...'
+```
+
+**2. Submit answer**
+```
+curl --location 'localhost:8080/review-extension' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ...' \
+--data '{
+    "reviewId": "880d408b-1e0b-4d11-b2b9-92eb52ed0dc6",
+    "isTrue": true
+}'
+```
+
 ## System Organization
 ### 1. Notification
 ![Notification Organization](./assets/NotificationOrganization.png)

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum ExtensionReviewType {
+public enum ExtensionReviewTypeEnum {
     TRANSLATE(1, "TRANSLATE"),
     SELECT(2, "SELECT"),
     COMPLETE(3, "COMPLETE");
@@ -15,8 +15,8 @@ public enum ExtensionReviewType {
     private int id;
     private String name;
 
-    public static ExtensionReviewType fromId(int id) {
-        for (ExtensionReviewType type : ExtensionReviewType.values()) {
+    public static ExtensionReviewTypeEnum fromId(int id) {
+        for (ExtensionReviewTypeEnum type : ExtensionReviewTypeEnum.values()) {
             if (type.getId() == id) {
                 return type;
             }

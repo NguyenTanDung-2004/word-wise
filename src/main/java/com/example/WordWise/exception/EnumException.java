@@ -19,7 +19,8 @@ public enum EnumException {
     USER_NOT_FOUND("e_03", "User not found", HttpStatus.NOT_FOUND), 
     PASSWORD_WRONG("e_04", "Password is incorrect", HttpStatus.UNAUTHORIZED),
     WORD_NOT_FOUND("e_05", "Word is not found", HttpStatus.NOT_FOUND),
-    CODE_RESET_PASSWORD_WRONG("e_06", "Code reset password is incorrect", HttpStatus.BAD_REQUEST),;
+    CODE_RESET_PASSWORD_WRONG("e_06", "Code reset password is incorrect", HttpStatus.BAD_REQUEST),
+    EXTENSION_REVIEW_NOT_FOUND("e_07", "Extension review is not found", HttpStatus.BAD_REQUEST);
 
     String code;
     String message;

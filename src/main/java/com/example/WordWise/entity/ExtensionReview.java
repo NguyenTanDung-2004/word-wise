@@ -1,6 +1,6 @@
 package com.example.WordWise.entity;
 
-import com.example.WordWise.enums.ExtensionReviewType;
+import com.example.WordWise.enums.ExtensionReviewTypeEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,11 +30,11 @@ public class ExtensionReview {
     private String description;
     private List<String> options;
 
-    public ExtensionReviewType getType() {
-        return ExtensionReviewType.fromId(type);
+    public ExtensionReviewTypeEnum getType() {
+        return ExtensionReviewTypeEnum.fromId(type);
     }
 
-    public void setExtensionReviewType(ExtensionReviewType type) {
+    public void setExtensionReviewType(ExtensionReviewTypeEnum type) {
         this.type = type.getId();
     }
 }

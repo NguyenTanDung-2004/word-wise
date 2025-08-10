@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public enum EnumResponse {
+    DONE("s_0", "DONE", HttpStatus.OK),
     CREATE_USER_SUCCESS("s_01", "Create user successfully", HttpStatus.OK),
     LOGIN_SUCCESS("s_02", "Login successfully", HttpStatus.OK),
     SEND_CODE_FORGOT_PASSWORD_SUCCESS("s_03", "Send code forgot password successfully", HttpStatus.OK),

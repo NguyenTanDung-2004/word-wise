@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.example.WordWise.enums.ExtensionReviewTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,9 @@ public class WordService {
     public List<Word> getListWords(int page, int pageSize, String userId) {
         List<Word> list = this.wordRepository.getListWords(userId, pageSize, page);
         return list;
+    }
+
+    public Word getWordForReviewExtension(String userId, ExtensionReviewTypeEnum typeEnum) {
+        return this.wordRepository.getReviewExtensionWord(userId, typeEnum.getId());
     }
 }

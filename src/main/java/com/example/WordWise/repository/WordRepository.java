@@ -19,5 +19,24 @@ public interface WordRepository extends JpaRepository<Word, String> {
         @Param("pageSize") int pageSize,
         @Param("offset") int offset
     );
+
+    @Query(value = """
+           SELECT w.*
+           FROM words w
+           LEFT JOIN (
+               SELECT er.word_id
+               FROM extension_review er
+               WHERE er.user_id = :userId
+                 AND er.is_true = true
+                 AND er.type = :typeId
+               ORDER BY er.test_date DESC
+               LIMIT 50
+           ) AS recent_reviews
+           ON w.id = recent_reviews.word_id
+           WHERE w.user_id = :userId
+             AND recent_reviews.word_id IS NULL
+           LIMIT 1;
+            """, nativeQuery = true)
+    public Word getReviewExtensionWord(String userId, int typeId);
     
 }
