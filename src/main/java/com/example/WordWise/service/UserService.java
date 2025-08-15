@@ -1,6 +1,7 @@
 package com.example.WordWise.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.WordWise.dto.request.CreateUserRequest;
@@ -21,6 +22,7 @@ import com.example.WordWise.utils.GenUtils;
 import com.example.WordWise.utils.JwtUtils;
 import com.example.WordWise.utils.PasswordUtils;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -115,6 +117,13 @@ public class UserService {
         User user = getUserFromId(userId);
 
         return user;
+    }
+
+    public String getUserFromAuthentication(Authentication authentication) {
+        Map<String, Object> userDetails = (Map<String, Object>) authentication.getPrincipal();
+        String userId = (String) userDetails.get("userId");
+
+        return userId;
     }
 
     public User getUserFromId(String userId) {
