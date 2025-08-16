@@ -63,6 +63,37 @@ curl --location 'http://localhost:8080/word/editWord' \
 }'
 ```
 
+**3. Add word manually**
+1. Call API to insert word
+2. Phonetic - Definition - PartOfSpeech
+```
+curl --location 'https://api.dictionaryapi.dev/api/v2/entries/en/workflow' \
+--header 'accept: application/json, text/javascript, */*; q=0.01' \
+--header 'accept-language: en-US,en;q=0.9,vi;q=0.8' \
+--header 'if-none-match: W/"2d7-YecRr8eg69eBwPugG3PiYQ"' \
+--header 'priority: u=1, i' \
+--header 'referer: https://www.wordsapi.com/?utm_source=chatgpt.com' \
+--header 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
+--header 'sec-ch-ua-mobile: ?0' \
+--header 'sec-ch-ua-platform: "Windows"' \
+--header 'sec-fetch-dest: empty' \
+--header 'sec-fetch-mode: cors' \
+--header 'sec-fetch-site: same-origin' \
+--header 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
+--header 'x-requested-with: XMLHttpRequest'
+```
+3. Example - Audio
+```
+curl --location 'https://od-api-sandbox.oxforddictionaries.com/api/v2/words/en-us?q=apple&fields=definitions%2Cexamples%2Cpronunciations' \
+--header 'app_id: 6873696d' \
+--header 'app_key: 51e385862e45b3add5a9c2ae3d39e658'
+```
+4. Call API to gen-idiom (one word can have idiom or not)
+```
+curl --location 'localhost:8080/word/gen-idiom/12e064c6-a8b7-48bb-9cf6-56e91c39f4c7''
+```
+5. Call API to update (based on the ticked options)
+
 **3. Get words within pagination**
 ```
 curl --location 'http://localhost:8080/word/words?page=0&size=3' \

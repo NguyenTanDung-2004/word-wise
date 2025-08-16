@@ -43,6 +43,13 @@ public class WordMapper implements Mapper{
         word.setNote(editWordRequest.getNote());
         word.setCreatedDate(LocalDateTime.now());
         word.setUpdatedDate(LocalDateTime.now());
+
+        // additional fields for adding word manually
+        word.setIdiom(editWordRequest.getIdiom());
+        word.setExample(editWordRequest.getExample());
+        word.setPhonetic(editWordRequest.getPhonetic());
+        word.setPartOfSpeech(editWordRequest.getPartOfSpeech());
+        word.setAudioUrl(editWordRequest.getAudioUrl());
         return word;
     }
 }

@@ -37,4 +37,11 @@ public class Word {
     // These fields below are used to support for Extension Review feature (TYPE = SELECT)
     private String description;
     private List<String> options;
+
+    // Additional fields for adding word manually
+    private String idiom;
+    private String example;
+    private String phonetic;
+    private String partOfSpeech;
+    private String audioUrl;
 }

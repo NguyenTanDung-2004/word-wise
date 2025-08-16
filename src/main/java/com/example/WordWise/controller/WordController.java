@@ -64,4 +64,14 @@ public class WordController {
         .build();
         return ResponseEntity.ok(apiResponse);
     }
+
+    @GetMapping("/gen-idiom/{wordId}")
+    public ResponseEntity generateIdiom(@PathVariable(name = "wordId") String wordId) {
+        Map<String, String> idiomMap = this.wordService.generateIdiom(wordId);
+        ApiResponse apiResponse = ApiResponse.builder()
+        .object(idiomMap)
+        .enumResponse(EnumResponse.toJson(EnumResponse.DONE))
+        .build();
+        return ResponseEntity.ok(apiResponse);
+    }
 }

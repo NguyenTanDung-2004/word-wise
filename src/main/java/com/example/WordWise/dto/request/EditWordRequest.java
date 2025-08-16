@@ -16,4 +16,11 @@ public class EditWordRequest {
     private String englishWord;
     private String vietnameseWord;
     private String note;
+
+    // additional fields for adding word originally
+    private String idiom;
+    private String example;
+    private String phonetic;
+    private String partOfSpeech;
+    private String audioUrl;
 }
