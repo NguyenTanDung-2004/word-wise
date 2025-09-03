@@ -1,5 +1,8 @@
 package com.example.WordWise.utils;
 
+import com.example.WordWise.entity.User;
+import com.example.WordWise.service.UserService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 
@@ -68,5 +71,12 @@ public class Utils {
         String userId = (String) userDetails.get("userId");
 
         return userId;
+    }
+
+    public static User getUserIdFromSecurityConfig(Authentication authentication, UserService userService) {
+        Map<String, Object> userDetails = (Map<String, Object>) authentication.getPrincipal();
+        String userId = (String) userDetails.get("userId");
+
+        return userService.getUserFromId(userId);
     }
 }

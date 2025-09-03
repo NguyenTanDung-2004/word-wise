@@ -2,13 +2,19 @@ spring:
   application:
     name: WordWise
   datasource:
-    url: jdbc:mysql://172.24.126.164:3307/word_wise
+    url: jdbc:mysql://172.26.231.254:3307/word_wise
     username: root
     password: 12345
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+  kafka:
+    bootstrap-servers: 172.26.231.254:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 jwt:
   secret: hS*0Z/VqAe{Loiu\BErc@2qsW-lG0a,/
   expiration: 3600
