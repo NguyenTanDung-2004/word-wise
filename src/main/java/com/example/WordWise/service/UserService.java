@@ -137,8 +137,6 @@ public class UserService {
             throw new UserException(EnumException.USER_NOT_FOUND);
         }
 
-        User user = optUser.get();
-
         return optUser.get();
     }
 

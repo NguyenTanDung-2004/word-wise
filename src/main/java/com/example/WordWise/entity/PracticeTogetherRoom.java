@@ -4,10 +4,7 @@ import com.example.WordWise.enums.PracticeTogetherRoomStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -17,9 +14,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PracticeTogetherRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
     private String id;
     private LocalDateTime createdDate;
     private LocalDateTime endDate;
@@ -39,6 +38,8 @@ public class PracticeTogetherRoom {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
+    @ToString.Exclude
     private User user;
 
     public PracticeTogetherRoomStatus getStatus() {

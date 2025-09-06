@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 
 import java.util.HashSet;
@@ -19,10 +16,12 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
     @Column(name = "user_id")
+    @EqualsAndHashCode.Include
     private String userId;
     private String userName; 
     private String email;
@@ -31,6 +30,8 @@ public class User {
     private String codeResetPassword;
     private String roleId;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<PracticeTogetherRoom> practiceTogetherRooms = new HashSet<>();
 }

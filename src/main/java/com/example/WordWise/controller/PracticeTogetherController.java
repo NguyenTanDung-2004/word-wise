@@ -12,6 +12,8 @@ import com.example.WordWise.utils.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,11 +51,8 @@ public class PracticeTogetherController {
     private PracticeTogetherRoomRepository roomRepository;
 
     @PostMapping("")
-    @Transactional
     public ResponseEntity createRoom(Authentication authentication, @RequestBody RequestCreatePracticeTogetherRoom request) {
         User user = Utils.getUserIdFromSecurityConfig(authentication, userService);
-        List<PracticeTogetherRoom> list = roomRepository.findByUser(user);
-        Hibernate.initialize(user.getPracticeTogetherRooms());
         PracticeTogetherRoom practiceTogetherRoom = practiceTogetherService.createRoom(user, request);
 
         ApiResponse apiResponse = ApiResponse.builder()

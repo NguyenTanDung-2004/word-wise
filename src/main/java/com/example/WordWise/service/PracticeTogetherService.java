@@ -48,7 +48,6 @@ public class PracticeTogetherService {
                 .numberOfQuestions(room.getNumberOfQuestions())
                 .userId(room.getUser().getUserId())
                 .build();
-
         String jsonKafkaObject = "";
         try {
             jsonKafkaObject = jsonUtils.toJson(kafkaObject);
@@ -56,6 +55,7 @@ public class PracticeTogetherService {
             throw new RuntimeException(e);
         }
         kafkaUtils.sendMessageToKafka(KafkaTopics.CREATE_PRACTICE_ROOM.getKey(), jsonKafkaObject);
+
         return room;
     }
 }

@@ -73,6 +73,7 @@ public class Utils {
         return userId;
     }
 
+    @Transactional
     public static User getUserIdFromSecurityConfig(Authentication authentication, UserService userService) {
         Map<String, Object> userDetails = (Map<String, Object>) authentication.getPrincipal();
         String userId = (String) userDetails.get("userId");
