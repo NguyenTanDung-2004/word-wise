@@ -14,6 +14,16 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: word-wises
+      auto-offset-reset: earliest
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  redis:
+    host: 172.26.231.254
+    port: 6379
+
+
 
 jwt:
   secret: hS*0Z/VqAe{Loiu\BErc@2qsW-lG0a,/
@@ -31,4 +41,4 @@ mail:
 
 external:
   gemini-api-json: templates/GeminiAPI.json
-  gemini-url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBhkq0H4KCQcClpWAaMI8LdheIzlajxYM8
+  gemini-url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDAeXr8IPVc61ndtEQuwvToHTaBlW_akSY

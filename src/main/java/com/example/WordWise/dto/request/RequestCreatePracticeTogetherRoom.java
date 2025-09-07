@@ -16,4 +16,5 @@ public class RequestCreatePracticeTogetherRoom {
     private Boolean isPublic;
     private String password;
     private String roomCode;
+    private String subjects;
 }

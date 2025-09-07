@@ -110,8 +110,6 @@ public class ExtensionReviewService {
             throw new RuntimeException("API response body is null");
         }
 
-        System.out.println(bodyResponse);
-
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(bodyResponse);
 

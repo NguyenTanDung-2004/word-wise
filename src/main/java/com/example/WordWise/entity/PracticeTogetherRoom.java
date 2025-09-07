@@ -1,5 +1,6 @@
 package com.example.WordWise.entity;
 
+import com.example.WordWise.enums.PracticeRoomQuestionType;
 import com.example.WordWise.enums.PracticeTogetherRoomStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "practice_together_room")
@@ -30,17 +32,22 @@ public class PracticeTogetherRoom {
     private Boolean isPublic;
     private String password;
 
-    @Column(columnDefinition = "text")
-    private String questions; // json content
     private String roomCode;
 
     private String status;
+
+    private String subjects; // user can choose the specific subjects to generate questions
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     @ToString.Exclude
     private User user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "room")
+    @JsonIgnore
+    @ToString.Exclude
+    private Set<PracticeRoomQuestion> questions;
 
     public PracticeTogetherRoomStatus getStatus() {
         return PracticeTogetherRoomStatus.fromId(status);

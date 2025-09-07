@@ -5,6 +5,7 @@ import com.example.WordWise.dto.response.ApiResponse;
 import com.example.WordWise.dto.response.EnumResponse;
 import com.example.WordWise.entity.PracticeTogetherRoom;
 import com.example.WordWise.entity.User;
+import com.example.WordWise.enums.KafkaTopics;
 import com.example.WordWise.repository.PracticeTogetherRoomRepository;
 import com.example.WordWise.service.PracticeTogetherService;
 import com.example.WordWise.service.UserService;
@@ -17,6 +18,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,4 +64,10 @@ public class PracticeTogetherController {
 
         return ResponseEntity.ok(apiResponse);
     }
+
+    @KafkaListener(groupId = "word-wise", topics = "CREATE_PRACTICE_ROOM")
+    public void generateQuestion(String message) {
+        practiceTogetherService.generateQuestions(message);
+    }
+
 }

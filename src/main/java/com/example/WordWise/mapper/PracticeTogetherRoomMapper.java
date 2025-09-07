@@ -30,6 +30,7 @@ public class PracticeTogetherRoomMapper implements Mapper{
                 .createdDate(LocalDateTime.now())
                 .updatedDate(LocalDateTime.now())
                 .isPublic(source.getIsPublic())
+                .subjects(source.getSubjects())
                 .build();
     }
 }

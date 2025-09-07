@@ -1,10 +1,11 @@
 services:
+  # MySQL (User Service DB)
   db_userservice:
     image: mysql:latest
     container_name: word_wise
     environment:
       - MYSQL_ROOT_PASSWORD=12345
-      - MYSQL_DATABASE=word_wise # this line is used to create the database
+      - MYSQL_DATABASE=word_wise
     ports:
       - "3307:3306"
     volumes:
@@ -14,17 +15,17 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s     # Check health every 10 seconds
-      timeout: 5s       # Wait 5 seconds for a response
-      retries: 3        # Retry 3 times before declaring failure
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
-  #kafka
+  # Kafka
   kafka:
     image: 'bitnami/kafka:3.7.0'
     container_name: kafka
     hostname: kafka
     ports:
-      - '9094:9094'
+      - "9094:9094"
     environment:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
@@ -33,8 +34,41 @@ services:
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    networks:
+      - word_wise
+    volumes:
+      - kafka_data:/bitnami/kafka
+
+  # Kafka UI
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8000:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+      - word_wise
+    volumes:
+      - kafka_ui_data:/etc/kafkaui
+
+  # Redis
+  redis:
+    image: redis:7
+    container_name: wordwise-redis
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "--appendonly", "yes" ]
+    volumes:
+      - redis-data:/data
+
 volumes:
-  word_wise_data:
+  word_wise_data:   # MySQL data
+  kafka_data:       # Kafka data
+  kafka_ui_data:    # Kafka UI config
+  redis-data:
+
 networks:
   word_wise:
     driver: bridge

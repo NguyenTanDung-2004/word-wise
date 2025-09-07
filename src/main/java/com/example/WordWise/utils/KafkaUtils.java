@@ -13,4 +13,8 @@ public class KafkaUtils {
     public void sendMessageToKafka(String topic, String textJson) {
         kafkaTemplate.send(topic, textJson);
     }
+
+    public String replaceSpecificCharacters(String message) {
+        return message.replaceAll("^\"|\"$", "").replace("\\", "");
+    }
 }

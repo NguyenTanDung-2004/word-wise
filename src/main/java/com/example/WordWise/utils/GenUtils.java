@@ -11,5 +11,5 @@ public class GenUtils {
             code.append(digit);
         }
         return code.toString();
-    }    
+    }
 }
