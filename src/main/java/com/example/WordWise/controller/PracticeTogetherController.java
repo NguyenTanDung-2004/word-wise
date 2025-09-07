@@ -19,10 +19,13 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -55,19 +58,29 @@ public class PracticeTogetherController {
     @PostMapping("")
     public ResponseEntity createRoom(Authentication authentication, @RequestBody RequestCreatePracticeTogetherRoom request) {
         User user = Utils.getUserIdFromSecurityConfig(authentication, userService);
-        PracticeTogetherRoom practiceTogetherRoom = practiceTogetherService.createRoom(user, request);
+        String handShakeToken = practiceTogetherService.createRoom(user, request);
 
         ApiResponse apiResponse = ApiResponse.builder()
-                .object(practiceTogetherRoom)
+                .object(handShakeToken)
                 .enumResponse(EnumResponse.toJson(EnumResponse.DONE))
                 .build();
 
         return ResponseEntity.ok(apiResponse);
     }
 
-    @KafkaListener(groupId = "word-wise", topics = "CREATE_PRACTICE_ROOM")
+    //@KafkaListener(groupId = "word-wise", topics = "CREATE_PRACTICE_ROOM")
     public void generateQuestion(String message) {
         practiceTogetherService.generateQuestions(message);
     }
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate; // Inject SimpMessagingTemplate
+    @GetMapping("/test")
+    public String test() {
+        Map<String, Object> datas = new HashMap<>();
+        datas.put("message", "Hello, this is a test message!");
+        datas.put("user", "Test User");
+        messagingTemplate.convertAndSend("/topic/admin/ac99377b-e74f-4fa6-855a-778eb6b223ba", datas);
+        return "ok";
+    }
 }

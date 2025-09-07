@@ -59,9 +59,24 @@ services:
     container_name: wordwise-redis
     ports:
       - "6379:6379"
+    networks:
+      - word_wise
     command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis-data:/data
+
+  # Redis UI
+  redis-ui:
+    image: redis/redisinsight
+    container_name: redis-ui
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      - word_wise
+
+
 
 volumes:
   word_wise_data:   # MySQL data

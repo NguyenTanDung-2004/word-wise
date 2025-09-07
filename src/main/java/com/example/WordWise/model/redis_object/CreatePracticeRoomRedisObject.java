@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,4 +16,5 @@ public class CreatePracticeRoomRedisObject {
     private Integer numberOfQuestions;
     private String userId;
     private String subjects;
+    private List<String> allowedList;
 }

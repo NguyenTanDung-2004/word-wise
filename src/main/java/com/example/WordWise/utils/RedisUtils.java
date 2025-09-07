@@ -12,9 +12,6 @@ public class RedisUtils {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    @Autowired
-    private ValueOperations<String, Object> valueOps;
-
     /**
      * Add key-value to Redis with optional expiration
      *
@@ -23,9 +20,13 @@ public class RedisUtils {
      * @param ttl   Time to live in seconds. 0 means no expiration
      */
     public void set(String key, Object value, long ttl) {
-        valueOps.set(key, value);
+        redisTemplate.opsForValue().set(key, value);
         if (ttl > 0) {
             redisTemplate.expire(key, ttl, TimeUnit.SECONDS);
         }
+    }
+
+    public Object get(String key) {
+        return redisTemplate.opsForValue().get(key);
     }
 }

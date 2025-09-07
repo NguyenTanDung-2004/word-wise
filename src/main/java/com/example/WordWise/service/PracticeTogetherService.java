@@ -11,10 +11,7 @@ import com.example.WordWise.model.KafkaObjects.CreatePracticeRoomKafkaObject;
 import com.example.WordWise.model.redis_object.CreatePracticeRoomRedisObject;
 import com.example.WordWise.repository.PracticeRoomQuestionRepository;
 import com.example.WordWise.repository.PracticeTogetherRoomRepository;
-import com.example.WordWise.utils.APIUtils;
-import com.example.WordWise.utils.JsonUtils;
-import com.example.WordWise.utils.KafkaUtils;
-import com.example.WordWise.utils.RedisUtils;
+import com.example.WordWise.utils.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,12 +59,15 @@ public class PracticeTogetherService {
     @Autowired
     private RedisUtils redisUtils;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     public void requestJoin(String roomId, String userId) {
         // public event to kafka
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public PracticeTogetherRoom createRoom(User user, RequestCreatePracticeTogetherRoom request) {
+    public String createRoom(User user, RequestCreatePracticeTogetherRoom request) {
         PracticeTogetherRoom room = new PracticeTogetherRoom();
         room = (PracticeTogetherRoom) mapper.map(request, room);
         room.setUser(user);
@@ -95,10 +95,12 @@ public class PracticeTogetherService {
                 .numberOfQuestions(room.getNumberOfQuestions())
                 .userId(room.getUser().getUserId())
                 .subjects(room.getSubjects())
+                .allowedList(List.of(user.getUserId()))
                 .build();
         redisUtils.set("admin/" + room.getId(), redisObject, 0);
 
-        return room;
+        String token = jwtUtils.generateJWTToHandShake(user.getUserId(), "admin/" + room.getId());
+        return token;
     }
 
     public void generateQuestions(String message) {
