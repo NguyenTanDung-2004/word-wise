@@ -21,12 +21,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PracticeTogetherService {
@@ -62,6 +60,9 @@ public class PracticeTogetherService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     public void requestJoin(String roomId, String userId) {
         // public event to kafka
     }
@@ -89,7 +90,7 @@ public class PracticeTogetherService {
         }
         kafkaUtils.sendMessageToKafka(KafkaTopics.CREATE_PRACTICE_ROOM.getKey(), jsonKafkaObject);
 
-        // add data to redis
+        // add data to redis (create room
         CreatePracticeRoomRedisObject redisObject = CreatePracticeRoomRedisObject.builder()
                 .roomId(room.getId())
                 .numberOfQuestions(room.getNumberOfQuestions())
@@ -161,6 +162,15 @@ public class PracticeTogetherService {
         // save
         practiceRoomQuestionRepository.saveAll(list);
 
-        // push event to kafka (topic: room is ready)
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        // publish event to STOMP channel
+        Map<String, Object> datas = new HashMap<>();
+        datas.put("message", practiceTogetherRoom);
+        messagingTemplate.convertAndSend("/topic/admin/" + practiceTogetherRoom.getId(), datas);
     }
 }

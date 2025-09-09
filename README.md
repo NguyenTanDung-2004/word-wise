@@ -189,6 +189,11 @@ notificationProcessor.process(notification);
 ]
 ```
 
+### 3. Practice Together
+#### 3.1. Admin create Room.
++ Step1: admin send request to a Room. (only create general information like name, subjects, ... At this step, we also send a message to the kafka to generate Questions). This function will return a token (The client need to use this token for handshaking with the server).
++ Step2: a function will listen the event on the kafka to generate Questions. When done, it will send a message to the channel "/topic/admin/{userId}"
++ Step3: when catch the message that is pushed to the topic, the client will handle it to show "Room is ready to practice".
 
 ## Problems and Solutions 
 ### 1. SpringBoot auto inject with addFilterBefore() function  

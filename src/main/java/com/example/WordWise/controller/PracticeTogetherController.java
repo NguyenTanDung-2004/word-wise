@@ -68,10 +68,11 @@ public class PracticeTogetherController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    //@KafkaListener(groupId = "word-wise", topics = "CREATE_PRACTICE_ROOM")
+    @KafkaListener(groupId = "word-wise", topics = "CREATE_PRACTICE_ROOM")
     public void generateQuestion(String message) {
         practiceTogetherService.generateQuestions(message);
     }
+
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate; // Inject SimpMessagingTemplate
