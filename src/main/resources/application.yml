@@ -2,7 +2,7 @@ spring:
   application:
     name: WordWise
   datasource:
-    url: jdbc:mysql://172.26.231.254:3307/word_wise
+    url: jdbc:mysql://172.24.126.164:3307/word_wise
     username: root
     password: 12345
   jpa:
@@ -10,7 +10,7 @@ spring:
       ddl-auto: update
     show-sql: true
   kafka:
-    bootstrap-servers: 172.26.231.254:9094
+    bootstrap-servers: 172.24.126.164:9094
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -20,7 +20,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
   redis:
-    host: 172.26.231.254
+    host: 172.24.126.164
     port: 6379
 
 

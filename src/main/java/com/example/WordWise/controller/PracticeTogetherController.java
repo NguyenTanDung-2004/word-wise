@@ -40,9 +40,10 @@ public class PracticeTogetherController {
     @PostMapping("/{roomId}/request-join")
     public ResponseEntity requestJoin(Authentication authentication, @PathVariable(name = "roomId") String roomId) {
         String userId = Utils.getUserIdFromSecurityConfig(authentication);
-        practiceTogetherService.requestJoin(roomId, userId);
+        String token = practiceTogetherService.requestJoin(roomId, userId);
 
         ApiResponse response = ApiResponse.builder()
+                .object(token)
                 .enumResponse(EnumResponse.toJson(EnumResponse.DONE))
                 .build();
 
@@ -68,11 +69,10 @@ public class PracticeTogetherController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @KafkaListener(groupId = "word-wise", topics = "CREATE_PRACTICE_ROOM")
+    //@KafkaListener(groupId = "word-wise", topics = "CREATE_PRACTICE_ROOM")
     public void generateQuestion(String message) {
         practiceTogetherService.generateQuestions(message);
     }
-
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate; // Inject SimpMessagingTemplate

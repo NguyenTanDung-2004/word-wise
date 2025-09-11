@@ -5,6 +5,7 @@ import com.example.WordWise.entity.PracticeRoomQuestion;
 import com.example.WordWise.entity.PracticeTogetherRoom;
 import com.example.WordWise.entity.User;
 import com.example.WordWise.enums.KafkaTopics;
+import com.example.WordWise.enums.PracticeSTOMPCommunicationEnum;
 import com.example.WordWise.enums.PromptEnum;
 import com.example.WordWise.mapper.Mapper;
 import com.example.WordWise.model.KafkaObjects.CreatePracticeRoomKafkaObject;
@@ -61,10 +62,29 @@ public class PracticeTogetherService {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private SimpMessagingTemplate stompTemplate;
 
-    public void requestJoin(String roomId, String userId) {
-        // public event to kafka
+    public String requestJoin(String roomId, String userId) {
+        // set data "request" and "personal" for redis
+        String redisRequestKey = "request/" + roomId;
+        String personalKey = "personal/" + userId;
+        Object data = redisUtils.get(redisRequestKey);
+        List<String> userIds = new ArrayList<>();
+        if (!Objects.isNull(data) && (data instanceof List)) {
+            userIds = (List<String>) data;
+        }
+        userIds.add(userId);
+        redisUtils.set(redisRequestKey, userIds, 0); // request
+        redisUtils.set(personalKey, userId, 0);
+
+        // push to admin channel
+        Map<String, Object> datas = new HashMap<>();
+        datas.put("message", userId);
+        datas.put("message_type", datas);
+        stompTemplate.convertAndSend("/topic/admin/" + roomId, userId);
+
+        String token = jwtUtils.generateJWTToHandShake(userId, "personal/" + roomId);
+        return token;
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -171,6 +191,7 @@ public class PracticeTogetherService {
         // publish event to STOMP channel
         Map<String, Object> datas = new HashMap<>();
         datas.put("message", practiceTogetherRoom);
-        messagingTemplate.convertAndSend("/topic/admin/" + practiceTogetherRoom.getId(), datas);
+        datas.put("message_type", PracticeSTOMPCommunicationEnum.CREATE_ROOM);
+        stompTemplate.convertAndSend("/topic/admin/" + practiceTogetherRoom.getId(), datas);
     }
 }
