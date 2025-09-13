@@ -83,7 +83,7 @@ public class PracticeTogetherService {
         datas.put("message_type", datas);
         stompTemplate.convertAndSend("/topic/admin/" + roomId, userId);
 
-        String token = jwtUtils.generateJWTToHandShake(userId, "personal/" + roomId);
+        String token = jwtUtils.generateJWTToHandShake(userId, "personal/" + roomId, PracticeSTOMPCommunicationEnum.REQUEST_JOIN);
         return token;
     }
 
@@ -120,7 +120,7 @@ public class PracticeTogetherService {
                 .build();
         redisUtils.set("admin/" + room.getId(), redisObject, 0);
 
-        String token = jwtUtils.generateJWTToHandShake(user.getUserId(), "admin/" + room.getId());
+        String token = jwtUtils.generateJWTToHandShake(user.getUserId(), "admin/" + room.getId(), PracticeSTOMPCommunicationEnum.CREATE_ROOM);
         return token;
     }
 
@@ -193,5 +193,32 @@ public class PracticeTogetherService {
         datas.put("message", practiceTogetherRoom);
         datas.put("message_type", PracticeSTOMPCommunicationEnum.CREATE_ROOM);
         stompTemplate.convertAndSend("/topic/admin/" + practiceTogetherRoom.getId(), datas);
+    }
+
+    public void accept(String roomId, String userId) {
+        // remove userId in request room
+        List<String> requestRoomUserIds = (List<String>) this.redisUtils.get("/request/" + roomId);
+        requestRoomUserIds.remove(userId);
+        this.redisUtils.set("/request" + roomId, requestRoomUserIds, 0);
+
+        // check practice room. if not exist create and add userId
+        List<String> practiceRoomUserIds = (List<String>)this.redisUtils.get("/practice/" + roomId);
+
+        if (practiceRoomUserIds == null) {
+            practiceRoomUserIds = new ArrayList<>();
+        }
+
+        practiceRoomUserIds.add(userId);
+        this.redisUtils.set("/practice/" + roomId, practiceRoomUserIds, 0);
+
+        // push notification to personal room and practice room
+        stompTemplate.convertAndSend("topic/personal/" + userId, "");
+        stompTemplate.convertAndSend("topic/practice/" + roomId, "");
+    }
+
+    public Boolean checkAcceptToJoinCondition(String adminUserId, String roomId) {
+        CreatePracticeRoomRedisObject object = (CreatePracticeRoomRedisObject) this.redisUtils.get("admin/" + roomId);
+
+        return adminUserId.equals(object.getUserId());
     }
 }

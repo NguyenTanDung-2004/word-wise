@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public enum PracticeSTOMPCommunicationEnum {
     CREATE_ROOM(1, "CREATE_ROOM"),
-    REQUEST_JOIN(2, "REQUEST_JOIN");
+    REQUEST_JOIN(2, "REQUEST_JOIN"),
+    PERSONAL_ROOM(3, "PERSONAL_ROOM");
     private int id;
     private String key;
 
-    public static PracticeSTOMPCommunicationEnum fromId(String key) {
+    public static PracticeSTOMPCommunicationEnum fromKey(String key) {
         for (PracticeSTOMPCommunicationEnum practiceSTOMPCommunicationEnum : PracticeSTOMPCommunicationEnum.values()) {
             if (practiceSTOMPCommunicationEnum.getKey().equals(key)) {
                 return practiceSTOMPCommunicationEnum;

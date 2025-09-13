@@ -6,6 +6,8 @@ import com.example.WordWise.dto.response.EnumResponse;
 import com.example.WordWise.entity.PracticeTogetherRoom;
 import com.example.WordWise.entity.User;
 import com.example.WordWise.enums.KafkaTopics;
+import com.example.WordWise.exception.EnumException;
+import com.example.WordWise.exception.UserException;
 import com.example.WordWise.repository.PracticeTogetherRoomRepository;
 import com.example.WordWise.service.PracticeTogetherService;
 import com.example.WordWise.service.UserService;
@@ -15,6 +17,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.kafka.shaded.com.google.protobuf.Api;
+import org.apache.kafka.shaded.com.google.protobuf.Enum;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +41,7 @@ public class PracticeTogetherController {
     @Autowired
     private PracticeTogetherService practiceTogetherService;
 
-    @PostMapping("/{roomId}/request-join")
+    @GetMapping("/{roomId}/request-join")
     public ResponseEntity requestJoin(Authentication authentication, @PathVariable(name = "roomId") String roomId) {
         String userId = Utils.getUserIdFromSecurityConfig(authentication);
         String token = practiceTogetherService.requestJoin(roomId, userId);
@@ -48,6 +52,24 @@ public class PracticeTogetherController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{roomId}/accept/{userId}")
+    public ResponseEntity acceptJoin(Authentication authentication, @PathVariable(name = "roomId") String roomId, @PathVariable(name = "userId") String userId) {
+        String adminUserId = Utils.getUserIdFromSecurityConfig(authentication);
+        // check role at here
+        if (!practiceTogetherService.checkAcceptToJoinCondition(adminUserId, roomId)) {
+            throw new UserException(EnumException.PERMISSION_DENIED);
+        }
+
+        this.practiceTogetherService.accept(roomId, userId);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .object(null)
+                .enumResponse(EnumResponse.toJson(EnumResponse.DONE))
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PersistenceContext

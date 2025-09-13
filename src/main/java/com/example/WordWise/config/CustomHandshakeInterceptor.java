@@ -49,22 +49,13 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
         Map<String, Object> decodedMap = this.jwtUtils.decodeHandShakeToken(token);
         String userId = (String) decodedMap.get("userId");
         String channel = (String) decodedMap.get("channel");
+        String action = (String) decodedMap.get("action");
 
-        if (userId == null || channel == null) {
+        if (userId == null || channel == null || action == null) {
             return false;
         }
 
-        CreatePracticeRoomRedisObject redisObject = (CreatePracticeRoomRedisObject) redisUtils.get(channel);
-
-        if (redisObject == null) {
-            return false;
-        }
-
-        if (redisObject.getAllowedList() != null && !redisObject.getAllowedList().contains(userId)) {
-            return false;
-        }
-
-        return true;
+        return redisUtils.filterToHandShake(userId, channel, action);
     }
 
     @Override

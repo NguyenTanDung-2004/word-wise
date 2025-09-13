@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.WordWise.enums.PracticeSTOMPCommunicationEnum;
 import com.example.WordWise.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -108,7 +109,7 @@ public class JwtUtils {
         }
     }
 
-    public String generateJWTToHandShake(String userId, String channel) {
+    public String generateJWTToHandShake(String userId, String channel, PracticeSTOMPCommunicationEnum action) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
 
         // Create the JWT claims set
@@ -119,6 +120,7 @@ public class JwtUtils {
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
                 .claim("userId", userId)
                 .claim("channel", channel)
+                .claim("action", action.getKey())
                 .build();
 
         // create payload
@@ -144,6 +146,7 @@ public class JwtUtils {
                 claimsMap.put("subject", claims.getSubject());
                 claimsMap.put("channel", claims.getClaim("channel"));
                 claimsMap.put("userId", claims.getClaim("userId"));
+                claimsMap.put("action", claims.getClaim("action"));
             } else {
                 throw new UserException(EnumException.VERIFY_TOKEN_FAIL);
             }
