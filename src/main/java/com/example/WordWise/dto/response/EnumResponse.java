@@ -28,7 +28,12 @@ public enum EnumResponse {
     INSERT_WORD_SUCCESS("s_09", "Insert word successfully!", HttpStatus.OK),
     EDIT_WORD_SUCCESS("s_10", "Edit word successfully!", HttpStatus.OK),
     GET_WORDS_SUCCESS("s_11", "Get words successfully!", HttpStatus.OK),
-    GET_NEWFEED_SUCCESS("s_12", "Get new feeds successfully!", HttpStatus.OK);
+    GET_NEWFEED_SUCCESS("s_12", "Get new feeds successfully!", HttpStatus.OK),
+    CREATE_COLLECTION_SUCCESS("s_13", "Create collection successfully!", HttpStatus.OK),
+    GET_COLLECTIONS_SUCCESS("s_14", "Get collections successfully!", HttpStatus.OK),
+    UPDATE_COLLECTION_SUCCESS("s_15", "Update collection successfully!", HttpStatus.OK),
+    DELETE_COLLECTION_SUCCESS("s_16", "Delete collection successfully!", HttpStatus.OK),
+    GET_COLLECTION_WORDS_SUCCESS("s_17", "Get collection words successfully!", HttpStatus.OK);
 
     String code;
     String message;

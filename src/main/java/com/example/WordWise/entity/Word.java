@@ -25,6 +25,7 @@ public class Word {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String userId;
+    private String collectionId;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private String context;

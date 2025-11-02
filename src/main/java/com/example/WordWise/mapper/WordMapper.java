@@ -32,6 +32,7 @@ public class WordMapper implements Mapper{
         word.setUserId(insertWordRequest.getUserId());
         word.setCreatedDate(LocalDateTime.now());
         word.setUpdatedDate(LocalDateTime.now());
+        word.setCollectionId(insertWordRequest.getCollectionId());
         return word;
     }
     

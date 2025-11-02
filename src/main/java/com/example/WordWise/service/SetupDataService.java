@@ -90,30 +90,38 @@ public class SetupDataService {
 
         userIds.stream().forEach(userId -> {
             List<InsertWordRequest> list = Arrays.asList(
-                    new InsertWordRequest(userId,
-                            "When you meet someone, you can say 'Hello' to greet them.",
-                            false,
-                            "Hello",
-                            "Xin chào",
-                            "This is a very common greeting used in many situations. You can use it when meeting someone for the first time or when entering a room. It is polite and friendly."),
-                    new InsertWordRequest(userId,
-                            "She ate an Apple for breakfast every morning.",
-                            true,
-                            "Apple",
-                            "Táo",
-                            "Apples are nutritious and come in many varieties. They are a staple in many diets and cultures."),
-                    new InsertWordRequest(userId,
-                            "The Dog barked loudly at the stranger.",
-                            false,
-                            "Dog",
-                            "Chó",
-                            "Dogs are loyal companions and have been domesticated for thousands of years. They are known for their intelligence and friendliness."),
-                    new InsertWordRequest(userId,
-                            "He read a Book about history last night.",
-                            true,
-                            "Book",
-                            "Sách",
-                            "Books are sources of knowledge and entertainment. They come in many genres and formats, and are essential for education.")
+                    InsertWordRequest.builder()
+                            .userId(userId)
+                            .context("When you meet someone, you can say 'Hello' to greet them.")
+                            .isExtension(false)
+                            .englishWord("Hello")
+                            .vietnameseWord("Xin chào")
+                            .note("This is a very common greeting used in many situations. You can use it when meeting someone for the first time or when entering a room. It is polite and friendly.")
+                            .build(),
+                    InsertWordRequest.builder()
+                            .userId(userId)
+                            .context("She ate an Apple for breakfast every morning.")
+                            .isExtension(true)
+                            .englishWord("Apple")
+                            .vietnameseWord("Táo")
+                            .note("Apples are nutritious and come in many varieties. They are a staple in many diets and cultures.")
+                            .build(),
+                    InsertWordRequest.builder()
+                            .userId(userId)
+                            .context("The Dog barked loudly at the stranger.")
+                            .isExtension(false)
+                            .englishWord("Dog")
+                            .vietnameseWord("Chó")
+                            .note("Dogs are loyal companions and have been domesticated for thousands of years. They are known for their intelligence and friendliness.")
+                            .build(),
+                    InsertWordRequest.builder()
+                            .userId(userId)
+                            .context("He read a Book about history last night.")
+                            .isExtension(true)
+                            .englishWord("Book")
+                            .vietnameseWord("Sách")
+                            .note("Books are sources of knowledge and entertainment. They come in many genres and formats, and are essential for education.")
+                            .build()
             );
 
            list.stream().forEach(insertWordRequest -> {

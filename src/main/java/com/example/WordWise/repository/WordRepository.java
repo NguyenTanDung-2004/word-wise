@@ -39,4 +39,12 @@ public interface WordRepository extends JpaRepository<Word, String> {
             """, nativeQuery = true)
     public Word getReviewExtensionWord(String userId, int typeId);
     
+    @Query(value = "SELECT * FROM words WHERE collection_id = :collectionId ORDER BY created_date DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
+    List<Word> getWordsByCollectionId(@Param("collectionId") String collectionId, @Param("pageSize") int pageSize, @Param("offset") int offset);
+
+    @Query(value = "SELECT COUNT(*) FROM words WHERE collection_id = :collectionId", nativeQuery = true)
+    Long countWordsByCollectionId(@Param("collectionId") String collectionId);
+
+    List<Word> findByCollectionId(String collectionId);
+
 }

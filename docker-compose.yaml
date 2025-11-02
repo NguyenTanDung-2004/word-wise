@@ -3,21 +3,28 @@ services:
     image: mysql:latest
     container_name: word_wise
     environment:
-      - MYSQL_ROOT_PASSWORD=12345
-      - MYSQL_DATABASE=word_wise # this line is used to create the database
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: word_wise
+      # Tắt SSL mặc định để client không bị lỗi
+      MYSQL_SSL_CA: ""
+      MYSQL_SSL_CERT: ""
+      MYSQL_SSL_KEY: ""
     ports:
-      - "3307:3306"
+      - "3307:3306"   # host:container
     volumes:
-      - ./volumes/word_wise:/var/lib/mysql
+      - wordwise_data:/var/lib/mysql   # named volume, tránh lỗi permission
     networks:
       - word_wise
     restart: always
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s     # Check health every 10 seconds
-      timeout: 5s       # Wait 5 seconds for a response
-      retries: 3        # Retry 3 times before declaring failure
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   word_wise:
     driver: bridge
+
+volumes:
+  wordwise_data:   # Docker tự quản lý, nằm trên Linux filesystem
