@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WordWise Challenge Room Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        body { font-family: sans-serif; display: flex; gap: 20px; }
+        .panel { border: 1px solid #ccc; padding: 10px; width: 48%; }
+        .logs { border: 1px solid #eee; padding: 5px; height: 300px; overflow-y: scroll; margin-top: 10px; background-color: #f8f9fa; }
+        .log-item { padding: 5px; border-bottom: 1px dotted #ccc; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+        .log-invite { background-color: #fffbe6; font-weight: bold; }
+        .log-room { background-color: #e6f7ff; }
+        .log-game { background-color: #d4edda; font-weight: bold;}
+        input, button { padding: 8px; margin: 2px; }
+        hr { margin: 15px 0; }
+        #gameArea { margin-top: 15px; border-top: 2px solid #007bff; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2>User A (Host)</h2>
+    <input type="text" id="tokenA" placeholder="User A Token" size="50"><br>
+    <button onclick="connectWs('A')">Connect WebSocket</button>
+    <hr>
+    <input type="text" id="gameModeA" value="definition-match">
+    <button onclick="createRoom('A')">Create Room</button><br>
+    <input type="text" id="roomIdA" placeholder="Room ID" readonly>
+    <input type="text" id="inviteCodeA" placeholder="Invite Code" readonly><br>
+    <input type="text" id="friendIdA" placeholder="Friend ID to invite (e.g., 2)">
+    <button onclick="inviteFriend('A')">Invite Friend</button>
+    <div id="statusA">Status: Disconnected</div>
+    <div id="gameAreaA" class="gameArea"></div>
+    <h4>Logs:</h4>
+    <div id="logsA" class="logs"></div>
+</div>
+
+<div class="panel">
+    <h2>User B (Friend)</h2>
+    <input type="text" id="tokenB" placeholder="User B Token" size="50"><br>
+    <button onclick="connectWs('B')">Connect WebSocket</button>
+    <hr>
+    <input type="text" id="inviteCodeB" placeholder="Paste Invite Code here">
+    <button onclick="joinRoom('B')">Join Room</button>
+    <div id="statusB">Status: Disconnected</div>
+    <div id="gameAreaB" class="gameArea"></div>
+    <h4>Logs:</h4>
+    <div id="logsB" class="logs"></div>
+</div>
+
+<script>
+    const clients = { A: { stomp: null, roomId: null }, B: { stomp: null, roomId: null } };
+    const serverUrl = 'http://localhost:8080';
+    const userIds = { A: 1, B: 2 };
+
+    function log(user, message, type) {
+        const logsDiv = document.getElementById(`logs${user}`);
+        const item = document.createElement('div');
+        item.className = `log-item ${type || ''}`;
+        item.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        logsDiv.appendChild(item);
+        logsDiv.scrollTop = logsDiv.scrollHeight;
+    }
+
+    function connectWs(user) {
+        const token = document.getElementById(`token${user}`).value;
+        const statusDiv = document.getElementById(`status${user}`);
+        if (!token) { alert('Please provide a Token'); return; }
+        const currentUserId = user === 'A' ? userIds.A : userIds.B;
+
+        const socket = new SockJS(`${serverUrl}/ws`);
+        const stompClient = Stomp.over(socket);
+        clients[user].stomp = stompClient;
+
+        stompClient.connect({ Authorization: `Bearer ${token}` }, () => {
+            statusDiv.textContent = 'Status: Connected!';
+            log(user, 'WebSocket Connected.');
+
+            const notificationDest = `/user/queue/notifications`;
+            stompClient.subscribe(notificationDest, (message) => {
+                const payload = JSON.parse(message.body);
+                if (payload.type === 'GAME_INVITE') {
+                     log(user, `ROOM INVITE: Host ${payload.hostName} invites you to room ${payload.roomId}. Code: ${payload.inviteCode}`, 'log-invite');
+                    if (user === 'B') document.getElementById('inviteCodeB').value = payload.inviteCode;
+                }
+            });
+            log(user, `Subscribed to personal channel: ${notificationDest}`);
+        }, (error) => {
+            statusDiv.textContent = `Status: Error - ${error}`;
+            log(user, `Connection Error: ${error}`);
+        });
+    }
+
+    async function apiCall(endpoint, method, token, body) {
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+        const options = { method, headers };
+        if (body) options.body = JSON.stringify(body);
+        const response = await fetch(`${serverUrl}${endpoint}`, options);
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`API Error ${response.status}: ${errorText}`);
+        }
+        return await response.json();
+    }
+
+    async function createRoom(user) {
+        const token = document.getElementById(`token${user}`).value;
+        const gameMode = document.getElementById(`gameMode${user}`).value;
+        try {
+            const result = await apiCall('/api/v1/challenge-rooms', 'POST', token, { gameMode });
+            if (result.success) {
+                const room = result.data;
+                document.getElementById(`roomId${user}`).value = room.roomId;
+                document.getElementById(`inviteCode${user}`).value = room.inviteCode;
+                log(user, `Room created! ID: ${room.roomId}, Code: ${room.inviteCode}`);
+                subscribeToRoom(user, room.roomId);
+                setupGameArea(user, room.roomId);
+            }
+        } catch (error) { log(user, error.message); }
+    }
+
+    async function inviteFriend(user) {
+        const token = document.getElementById(`token${user}`).value;
+        const roomId = document.getElementById(`roomId${user}`).value;
+        const friendId = document.getElementById(`friendId${user}`).value;
+        if (!roomId || !friendId) { alert('Need Room ID and Friend ID'); return; }
+        try {
+            await apiCall(`/api/v1/challenge-rooms/${roomId}/invite`, 'POST', token, { friendIds: [parseInt(friendId)] });
+            log(user, `Invitation sent to user ${friendId}.`);
+        } catch (error) { log(user, error.message); }
+    }
+
+    async function joinRoom(user) {
+        const token = document.getElementById(`token${user}`).value;
+        const inviteCode = document.getElementById(`inviteCode${user}`).value;
+        if (!inviteCode) { alert('Need Invite Code'); return; }
+        try {
+            const result = await apiCall('/api/v1/challenge-rooms/join', 'POST', token, { inviteCode });
+             if (result.success) {
+                const room = result.data;
+                log(user, `Joined room ${room.roomId} successfully!`);
+                subscribeToRoom(user, room.roomId);
+                setupGameArea(user, room.roomId);
+            }
+        } catch (error) { log(user, error.message); }
+    }
+
+    function subscribeToRoom(user, roomId) {
+        const stompClient = clients[user].stomp;
+        const roomDest = `/topic/challenge-room/${roomId}`;
+        stompClient.subscribe(roomDest, (message) => {
+            const payload = JSON.parse(message.body);
+            log(user, `ROOM EVENT (${payload.type}): \n${JSON.stringify(payload, null, 2)}`, 'log-room');
+
+            if (payload.type === 'SCOREBOARD_UPDATE' || payload.type === 'GAME_OVER' || payload.type === 'PLAYER_JOINED') {
+                const scoreboardDiv = document.getElementById(`scoreboard${user}`);
+                let participants = payload.scoreboard || payload.participants;
+                if (scoreboardDiv && participants) {
+                    participants.sort((a, b) => (b.score || 0) - (a.score || 0));
+                    const scoreboardHtml = participants.map((p, index) =>
+                        `<li>#${index + 1} ${p.username}: ${p.score || 0} pts</li>`
+                    ).join('');
+                    scoreboardDiv.innerHTML = `<ul>${scoreboardHtml}</ul>`;
+                }
+            }
+            if (payload.type === 'GAME_OVER') {
+                document.getElementById(`gameArea${user}`).innerHTML += `<p style="color:red; font-weight:bold;">GAME OVER!</p>`;
+            }
+        });
+        log(user, `Subscribed to room channel: ${roomDest}`);
+    }
+
+    function setupGameArea(user, roomId) {
+        clients[user].roomId = roomId;
+        const gameArea = document.getElementById(`gameArea${user}`);
+        gameArea.innerHTML = `
+            <h3>Game Room ${roomId}</h3>
+            <button onclick="startGame('${user}')">Start Game (Host only)</button>
+            <hr>
+            <p><strong>Scoreboard:</strong></p>
+            <div id="scoreboard${user}"></div>
+            <hr>
+            <p><strong>My Score:</strong> <span id="myScore${user}">0</span></p>
+            <button onclick="submitScore('${user}')">Submit My Score (+10)</button>
+        `;
+    }
+
+    async function startGame(user) {
+        const token = document.getElementById(`token${user}`).value;
+        const roomId = clients[user].roomId;
+        if (!roomId) { log(user, "Not in a room."); return; }
+        try {
+            await apiCall(`/api/v1/game/challenge-room/${roomId}/start`, 'GET', token);
+            log(user, `Sent START_GAME command.`);
+        } catch(error) { log(user, error.message); }
+    }
+
+    function submitScore(user) {
+        const stompClient = clients[user].stomp;
+        const roomId = clients[user].roomId;
+        if (!stompClient || !roomId) { log(user, "Not in a room."); return; }
+
+        const myScoreSpan = document.getElementById(`myScore${user}`);
+        let currentScore = parseInt(myScoreSpan.textContent);
+        currentScore += 10;
+        myScoreSpan.textContent = currentScore;
+
+        const destination = `/app/challenge-room/${roomId}/score`;
+        const payload = JSON.stringify({ score: currentScore });
+        stompClient.send(destination, {}, payload);
+        log(user, `Sent SCORE_UPDATE (${currentScore} pts)`);
+    }
+
+    function disconnect(user) {
+        if (clients[user] && clients[user].stomp) {
+            clients[user].stomp.disconnect(() => {
+                document.getElementById(`status${user}`).textContent = 'Status: Disconnected';
+                log(user, 'Disconnected.');
+            });
+        }
+    }
+</script>
+</body>
+</html>
