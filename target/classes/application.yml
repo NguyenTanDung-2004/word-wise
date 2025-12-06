@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: WordWise
+  datasource:
+    url: jdbc:mysql://172.26.231.254:3307/word_wise
+    username: root
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  kafka:
+    bootstrap-servers: 172.26.231.254:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: word-wises
+      auto-offset-reset: earliest
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  redis:
+    host: 172.26.231.254
+    port: 6379
+
+
+
+jwt:
+  secret: hS*0Z/VqAe{Loiu\BErc@2qsW-lG0a,/
+  expiration: 3600
+
+user:
+  defaultavt: https://res.cloudinary.com/dos914bk9/image/upload/v1738333283/avt/kazlexgmzhz3izraigsv.jpg
+
+mail:
+  apikey: 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
+  url: https://api.brevo.com/v3/smtp/email
+  sendername: Word-Wise
+  senderemail: 22520001@gm.uit.edu.vn
+  templatePath: templates
+
+external:
+  gemini-api-json: templates/GeminiAPI.json
+  gemini-url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDAeXr8IPVc61ndtEQuwvToHTaBlW_akSY
